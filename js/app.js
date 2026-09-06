@@ -111,14 +111,41 @@
         ? '<p class="banner banner-soft" role="note">本模块为<strong>文化 / 象征透镜</strong>，仅供启发，禁止宿命论断，不作科学证据。</p>'
         : "";
 
-    var explainSteps = toSteps(mod.explain);
+    function renderExplainBlocks(blocks) {
+      if (!blocks || !blocks.length) return "";
+      return blocks
+        .map(function (b) {
+          if (!b || typeof b !== "object") return "";
+          var html = "";
+          if (b.h) html += "<h3>" + escapeHtml(b.h) + "</h3>";
+          if (b.p) html += "<p>" + escapeHtml(b.p) + "</p>";
+          if (b.items && b.items.length) {
+            html +=
+              "<ul>" +
+              b.items
+                .map(function (x) {
+                  return "<li>" + escapeHtml(x) + "</li>";
+                })
+                .join("") +
+              "</ul>";
+          }
+          return html;
+        })
+        .join("");
+    }
+
     var explainHtml;
-    if (explainSteps.length > 1 && /\d+[）\)\.、]/.test(String(mod.explain || ""))) {
-      explainHtml = list(explainSteps, true);
-    } else if (Array.isArray(mod.explain)) {
-      explainHtml = list(mod.explain, false);
+    if (mod.explainBlocks && mod.explainBlocks.length) {
+      explainHtml = renderExplainBlocks(mod.explainBlocks);
     } else {
-      explainHtml = "<p>" + escapeHtml(mod.explain || "") + "</p>";
+      var explainSteps = toSteps(mod.explain);
+      if (explainSteps.length > 1 && /\d+[）\)\.、]/.test(String(mod.explain || ""))) {
+        explainHtml = list(explainSteps, true);
+      } else if (Array.isArray(mod.explain)) {
+        explainHtml = list(mod.explain, false);
+      } else {
+        explainHtml = "<p>" + escapeHtml(mod.explain || "") + "</p>";
+      }
     }
 
     var howSteps = toSteps(mod.howToUse);
