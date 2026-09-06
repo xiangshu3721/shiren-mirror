@@ -271,6 +271,33 @@
     }, 40);
   }
 
+  function getAskMode(form) {
+    var checked = form.querySelector('input[name="ask-mode"]:checked');
+    var v = checked ? checked.value : "analyze";
+    return v === "recommend" ? "recommend" : "analyze";
+  }
+
+  function modeLabels(mode) {
+    if (mode === "recommend") {
+      return {
+        submit: "生成推荐",
+        loadingBtn: "推荐中…",
+        loading: "正在以正见校准并匹配推荐模型…"
+      };
+    }
+    return {
+      submit: "开始分析",
+      loadingBtn: "分析中…",
+      loading: "正在以正见校准并按框架分析…"
+    };
+  }
+
+  function syncAskSubmitLabel(form, btn) {
+    if (!btn || !form) return;
+    var labels = modeLabels(getAskMode(form));
+    if (!btn.disabled) btn.textContent = labels.submit;
+  }
+
   function initAskPage() {
     var form = qs("#ask-form");
     var out = qs("#ask-result");
@@ -279,22 +306,31 @@
     var intent = qs("#intent-input");
     if (!form || !out) return;
 
+    qsa('input[name="ask-mode"]', form).forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        syncAskSubmitLabel(form, btn);
+      });
+    });
+    syncAskSubmitLabel(form, btn);
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var mode = getAskMode(form);
+      var labels = modeLabels(mode);
       out.setAttribute("aria-busy", "true");
-      out.innerHTML = '<p class="muted loading-line" role="status">正在以正见校准并合成透镜…</p>';
+      out.innerHTML = '<p class="muted loading-line" role="status">' + labels.loading + "</p>";
       if (btn) {
         btn.disabled = true;
-        btn.textContent = "看见中…";
+        btn.textContent = labels.loadingBtn;
       }
       setTimeout(function () {
-        var result = window.AskEngine.run(person.value, intent.value);
+        var result = window.AskEngine.run(person.value, intent.value, mode);
         out.innerHTML = result.html;
         out.setAttribute("aria-busy", "false");
         out.focus && out.focus();
         if (btn) {
           btn.disabled = false;
-          btn.textContent = "开始看见";
+          btn.textContent = modeLabels(getAskMode(form)).submit;
         }
         try {
           out.scrollIntoView({ behavior: "smooth", block: "start" });

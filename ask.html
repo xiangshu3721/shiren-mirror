@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="知人镜智能识人：伦理门禁后的多透镜合成参考。" />
+  <meta name="description" content="知人镜智能识人：推荐模型或直接分析，伦理门禁后的多透镜参考。" />
   <title>智能识人 · 知人镜</title>
   <link rel="stylesheet" href="css/site.css" />
 </head>
@@ -24,12 +24,31 @@
     <header class="page-intro">
       <h1>智能识人</h1>
       <p class="lead">
-        写下对方的基本情况与你的核心诉求。系统会先做<strong>正见门禁</strong>，再组合知识库透镜，给出可验证的假设与抱持建议。
+        写下对方的基本情况与你的核心诉求。系统会先做<strong>正见门禁</strong>，再按你选择的模式工作：
+        <strong>推荐模型</strong>帮你选透镜与用法；<strong>直接分析</strong>则按框架给出对待验证的解读。
         全程可离线运行；结果不是诊断，更不是操控手册。
       </p>
     </header>
 
     <form id="ask-form" class="ask-form" novalidate>
+      <fieldset class="mode-switch" role="radiogroup" aria-labelledby="mode-legend">
+        <legend id="mode-legend" class="field-label">选择模式</legend>
+        <label class="mode-card">
+          <input type="radio" name="ask-mode" value="recommend" />
+          <span class="mode-card-body">
+            <span class="mode-card-title">推荐用什么模型</span>
+            <span class="mode-card-desc">帮你选透镜与用法——教你看什么、怎么用，不直接下结论</span>
+          </span>
+        </label>
+        <label class="mode-card">
+          <input type="radio" name="ask-mode" value="analyze" checked />
+          <span class="mode-card-body">
+            <span class="mode-card-title">直接帮我分析</span>
+            <span class="mode-card-desc">按匹配框架给出对人的解读——假设待验证，概率而非定论</span>
+          </span>
+        </label>
+      </fieldset>
+
       <div>
         <label class="field-label" for="person-input">对方基本情况</label>
         <textarea id="person-input" name="person" required
@@ -41,7 +60,7 @@
           placeholder="例：想判断是否值得信任与合作，如何防骗自保，同时尽量不伤害这份友谊。"></textarea>
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn" id="ask-submit">开始看见</button>
+        <button type="submit" class="btn" id="ask-submit">开始分析</button>
         <p class="form-hint">允许：防骗、理解冲突、改善沟通、评估匹配、支持对方。<br />拒绝：操控、欺骗、报复、跟踪等伤害意图。</p>
       </div>
     </form>
