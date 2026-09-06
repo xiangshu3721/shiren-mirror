@@ -32,10 +32,12 @@ python3 -m http.server 8891
 
 ## 技术说明
 
-- 数据：`js/kb.js`（19 个模块）  
+- 数据：`js/kb.js`（19 个模块；`howToUse` 为步骤数组）  
+- 结构图：`js/diagrams.js`（每模块一张墨金风 SVG，模块页以「结构图」展示）  
 - 伦理：`js/ethics.js`（拒绝 / 软提示 / 允许）  
 - 引擎：`js/engine.js`（关键词评分 + 模板合成；文件内注释标明 AI Gateway 接入点）  
-- 样式：`css/site.css`（墨色底、柔金点缀、中文衬线标题栈）
+- 样式：`css/site.css`（墨色底、柔金点缀、中文衬线标题栈；含 `.module-diagram`）  
+- 原生家庭模块已按「考古五向度」展开（原厂设置 / 教育 / 文化 / 阶级 / 时代）
 
 ## 免责
 

@@ -40,6 +40,44 @@
       .replace(/"/g, "&quot;");
   }
 
+
+  /** Split numbered prose ("1）…2）…") into step strings; arrays pass through. */
+  function toSteps(val) {
+    if (Array.isArray(val)) {
+      return val.map(function (x) { return String(x).trim(); }).filter(Boolean);
+    }
+    if (val == null) return [];
+    var s = String(val).trim();
+    if (!s) return [];
+    if (s.indexOf("\n") !== -1) {
+      return s.split(/\n+/).map(function (x) { return x.replace(/^\d+[）\)\.、]\s*/, "").trim(); }).filter(Boolean);
+    }
+    var hasNum = /\d+[）\)\.、]/.test(s);
+    if (hasNum) {
+      return s
+        .split(/(?=\d+[）\)\.、])/)
+        .map(function (x) { return x.replace(/^\d+[）\)\.、]\s*/, "").replace(/[；;。]\s*$/, "").trim(); })
+        .filter(Boolean);
+    }
+    if (/[；;]/.test(s) && s.split(/[；;]/).length >= 2) {
+      return s.split(/[；;]/).map(function (x) { return x.replace(/[。]\s*$/, "").trim(); }).filter(Boolean);
+    }
+    return [s];
+  }
+
+  function renderDiagram(mod) {
+    var svg = mod.diagram || (window.KB_DIAGRAMS && window.KB_DIAGRAMS[mod.id]);
+    if (!svg || typeof svg !== "string") return "";
+    if (/<script/i.test(svg)) return "";
+    return (
+      '<figure class="module-diagram">' +
+      svg +
+      "<figcaption>结构图</figcaption>" +
+      "</figure>"
+    );
+  }
+
+
   function renderModuleDetail(container, id) {
     if (!container) return;
     var mod = window.KB_BY_ID && window.KB_BY_ID[id];
@@ -73,6 +111,19 @@
         ? '<p class="banner banner-soft" role="note">本模块为<strong>文化 / 象征透镜</strong>，仅供启发，禁止宿命论断，不作科学证据。</p>'
         : "";
 
+    var explainSteps = toSteps(mod.explain);
+    var explainHtml;
+    if (explainSteps.length > 1 && /\d+[）\)\.、]/.test(String(mod.explain || ""))) {
+      explainHtml = list(explainSteps, true);
+    } else if (Array.isArray(mod.explain)) {
+      explainHtml = list(mod.explain, false);
+    } else {
+      explainHtml = "<p>" + escapeHtml(mod.explain || "") + "</p>";
+    }
+
+    var howSteps = toSteps(mod.howToUse);
+    var howHtml = howSteps.length ? list(howSteps, true) : '<p class="muted">暂无</p>';
+
     container.innerHTML =
       '<article class="module-article">' +
       '<p class="breadcrumb"><a href="kb.html">知识库</a> / <span>' +
@@ -92,15 +143,16 @@
       "</p>" +
       "</header>" +
       tierNote +
+      renderDiagram(mod) +
       '<section class="result-block"><h2>核心要点</h2>' +
       list(mod.corePoints, true) +
       "</section>" +
-      '<section class="result-block"><h2>内容解释</h2><p>' +
-      escapeHtml(mod.explain) +
-      "</p></section>" +
-      '<section class="result-block"><h2>使用说明</h2><p>' +
-      escapeHtml(mod.howToUse) +
-      "</p></section>" +
+      '<section class="result-block"><h2>内容解释</h2>' +
+      explainHtml +
+      "</section>" +
+      '<section class="result-block"><h2>使用说明</h2>' +
+      howHtml +
+      "</section>" +
       '<section class="result-block"><h2>适用场景</h2>' +
       list(mod.scenarios, false) +
       "</section>" +
@@ -153,7 +205,7 @@
             escapeHtml(m.category || "") +
             "</span></div><h3>" +
             escapeHtml(m.name) +
-            "</h3><p>" +
+            '</h3><p class="card-diagram-hint">含结构图</p><p>' +
             escapeHtml(m.summary) +
             "</p></a>";
         });
@@ -233,6 +285,7 @@
 
   window.ShirenApp = {
     escapeHtml: escapeHtml,
-    getQueryParam: getQueryParam
+    getQueryParam: getQueryParam,
+    toSteps: toSteps
   };
 })();

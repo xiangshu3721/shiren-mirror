@@ -450,3 +450,61 @@ textarea::placeholder { color: rgba(168, 159, 144, 0.55); }
     scroll-behavior: auto !important;
   }
 }
+
+
+/* —— 模块结构图 —— */
+.module-diagram {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1rem 0.75rem;
+  background: rgba(26, 24, 20, 0.85);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.module-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-width: 260px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.module-diagram figcaption {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  font-family: var(--font-serif);
+}
+
+.card-diagram-hint {
+  margin: 0 0 0.35rem !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em;
+  color: var(--gold) !important;
+}
+
+/* 编号步骤列表更清晰 */
+.result-block ol {
+  list-style: decimal;
+  padding-left: 1.35rem;
+}
+.result-block ol > li,
+.result-block ul > li {
+  margin: 0.5rem 0;
+  line-height: 1.65;
+  padding-left: 0.15rem;
+}
+.page-intro ol > li {
+  margin: 0.55rem 0;
+  line-height: 1.7;
+}
+.lead-steps {
+  margin: 0 0 1.25rem;
+  padding-left: 1.35rem;
+  color: var(--ink-dim);
+}
+.lead-steps li { margin: 0.4rem 0; }
